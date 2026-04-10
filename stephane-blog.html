@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stéphane Karim — A Living Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1a1208;
+      --paper: #f5efe3;
+      --gold: #c8933a;
+      --terracotta: #b85c38;
+      --indigo: #2b3a5e;
+      --sage: #7a8c6e;
+      --cream: #fdf8ef;
+      --dust: #e8dcc8;
+      --accent: #d4622a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.35;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(245, 239, 227, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--dust);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none; opacity: 0.65;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--terracotta); }
+
+    .hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: end;
+      padding: 8rem 3rem 5rem;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 70% 40%, rgba(200,147,58,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(184,92,56,0.1) 0%, transparent 60%);
+    }
+
+    .hero-geo {
+      position: absolute; top: 15%; right: 5%;
+      width: 340px; height: 340px; opacity: 0.06;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .hero-eyebrow::before { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 300;
+      line-height: 0.95; letter-spacing: -0.02em; margin-bottom: 2rem;
+    }
+    h1 em { font-style: italic; color: var(--terracotta); }
+
+    .hero-sub {
+      font-size: 1.15rem; color: var(--ink); opacity: 0.65;
+      max-width: 420px; font-weight: 300; line-height: 1.8;
+    }
+
+    .hero-scroll-hint {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink);
+      opacity: 0.4; margin-top: 4rem; display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-scroll-hint::after { content: ''; display: block; width: 1px; height: 50px; background: currentColor; }
+
+    .hero-right { position: relative; z-index: 2; display: flex; justify-content: flex-end; align-items: flex-end; padding-bottom: 1rem; }
+    .hero-tagline-block { text-align: right; border-right: 2px solid var(--gold); padding-right: 2rem; }
+    .hero-tagline-block p { font-size: 1.1rem; font-style: italic; line-height: 1.9; opacity: 0.55; max-width: 320px; }
+
+    section { padding: 6rem 3rem; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold);
+      margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--dust); }
+
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem;
+    }
+    h2 em { font-style: italic; color: var(--terracotta); }
+
+    /* ABOUT */
+    .about { background: var(--ink); color: var(--paper); position: relative; overflow: hidden; }
+    .about::before {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,147,58,0.08) 0%, transparent 70%); pointer-events: none;
+    }
+    .about .section-label { color: var(--gold); }
+    .about .section-label::after { background: rgba(255,255,255,0.1); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .about h2 { color: var(--paper); }
+    .about h2 em { color: var(--gold); }
+    .about-body { font-size: 1.15rem; line-height: 2; opacity: 0.8; }
+
+    .pillars { display: flex; flex-direction: column; gap: 2rem; margin-top: 1rem; }
+    .pillar { border-left: 2px solid var(--gold); padding-left: 1.5rem; }
+    .pillar-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 0.4rem; }
+    .pillar h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; color: var(--paper); margin-bottom: 0.4rem; }
+    .pillar p { font-size: 0.95rem; opacity: 0.6; line-height: 1.7; }
+
+    /* POSTS */
+    .posts { background: var(--cream); }
+    .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1rem; }
+
+    .post-card {
+      background: var(--paper); border: 1px solid var(--dust); padding: 2.5rem 2rem;
+      cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .post-card::before {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 3px; background: var(--terracotta);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+    }
+    .post-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(26,18,8,0.1); }
+    .post-card:hover::before { transform: scaleX(1); }
+
+    .post-card.featured {
+      grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2.5rem; align-items: center;
+      background: var(--ink); color: var(--paper); border-color: transparent;
+    }
+    .post-card.featured .post-cat { color: var(--gold); }
+    .post-card.featured .post-title { color: var(--paper); }
+    .post-card.featured .post-excerpt { color: rgba(245,239,227,0.65); }
+    .post-card.featured .post-meta { color: rgba(245,239,227,0.4); }
+
+    .featured-image-box {
+      width: 100%; aspect-ratio: 4/3; overflow: hidden;
+      background: linear-gradient(135deg, rgba(200,147,58,0.2), rgba(184,92,56,0.15));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .featured-image-box img { width: 100%; height: 100%; object-fit: cover; }
+    .featured-image-box .no-img { opacity: 0.3; }
+
+    .post-cover {
+      width: 100%; aspect-ratio: 16/9; overflow: hidden;
+      background: var(--dust); margin-bottom: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .post-cover img { width: 100%; height: 100%; object-fit: cover; }
+    .post-cover .no-img-small { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--ink); opacity: 0.3; }
+
+    .post-cat {
+      font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--terracotta); margin-bottom: 1rem;
+    }
+    .post-title {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600;
+      line-height: 1.25; color: var(--ink); margin-bottom: 1rem;
+    }
+    .post-excerpt { font-size: 0.95rem; opacity: 0.65; line-height: 1.75; margin-bottom: 1.5rem; }
+    .post-meta { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.1em; color: var(--ink); opacity: 0.4; }
+
+    .read-more {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--gold); text-decoration: none;
+      margin-top: 1.5rem; transition: gap 0.2s;
+    }
+    .read-more:hover { gap: 1rem; }
+    .read-more::after { content: '→'; }
+
+    /* RECS */
+    .recs { background: var(--paper); }
+    .recs-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--dust); margin-bottom: 3rem; }
+    .tab-btn {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+      background: none; border: none; padding: 1rem 2rem; cursor: pointer;
+      color: var(--ink); opacity: 0.4; border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: opacity 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .tab-btn.active { opacity: 1; color: var(--terracotta); border-bottom-color: var(--terracotta); }
+    .tab-btn:hover { opacity: 0.8; }
+    .tab-content { display: none; }
+    .tab-content.active { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .rec-card { padding: 1.75rem; border: 1px solid var(--dust); background: var(--cream); transition: border-color 0.2s; }
+    .rec-card:hover { border-color: var(--gold); }
+    .rec-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+    .rec-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .rec-sub { font-size: 0.85rem; opacity: 0.55; line-height: 1.6; }
+
+    /* EXCITED */
+    .excited { background: var(--terracotta); color: var(--paper); position: relative; overflow: hidden; }
+    .excited::after {
+      content: 'NOW'; position: absolute; right: -2rem; bottom: -3rem;
+      font-family: 'Syne', sans-serif; font-size: 12rem; font-weight: 800;
+      letter-spacing: -0.05em; opacity: 0.06; pointer-events: none; line-height: 1;
+    }
+    .excited .section-label { color: rgba(255,255,255,0.6); }
+    .excited .section-label::after { background: rgba(255,255,255,0.2); }
+    .excited h2 { color: var(--paper); }
+    .excited h2 em { color: var(--gold); }
+    .excited-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 2rem; }
+    .excited-item { padding: 2rem; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); }
+    .excited-item-label { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.75rem; }
+    .excited-item h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .excited-item p { font-size: 0.92rem; opacity: 0.72; line-height: 1.75; }
+
+    /* CONNECT */
+    .connect { background: var(--ink); color: var(--paper); text-align: center; }
+    .connect .section-label { justify-content: center; color: var(--gold); }
+    .connect .section-label::before { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .connect .section-label::after { background: rgba(255,255,255,0.1); }
+    .connect h2 { color: var(--paper); margin-bottom: 1rem; }
+    .connect h2 em { color: var(--gold); }
+    .connect-sub { font-size: 1.1rem; opacity: 0.55; max-width: 500px; margin: 0 auto 3.5rem; line-height: 1.9; }
+    .connect-options { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 4rem; }
+    .connect-card {
+      border: 1px solid rgba(255,255,255,0.12); padding: 2rem 2.5rem; min-width: 200px;
+      cursor: pointer; text-decoration: none; color: var(--paper);
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+    }
+    .connect-card:hover { background: rgba(200,147,58,0.1); border-color: var(--gold); transform: translateY(-3px); }
+    .connect-card-icon { font-size: 1.6rem; }
+    .connect-card-title { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    .connect-card-desc { font-size: 0.82rem; opacity: 0.5; text-align: center; line-height: 1.5; }
+    .connect-email-block { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 3rem; }
+    .connect-email-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.35; margin-bottom: 1rem; }
+    .connect-email { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-style: italic; color: var(--gold); text-decoration: none; transition: opacity 0.2s; }
+    .connect-email:hover { opacity: 0.75; }
+
+    footer {
+      background: var(--ink); border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; color: var(--paper);
+    }
+    footer p { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; opacity: 0.3; }
+    .footer-mark { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; opacity: 0.4; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { opacity: 0; animation: fadeUp 0.9s ease forwards; }
+
+    /* Empty state */
+    .empty-posts {
+      grid-column: 1/-1; text-align: center; padding: 4rem 2rem;
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.35;
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; }
+      .hero-right { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .posts-grid { grid-template-columns: 1fr; }
+      .post-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+      .tab-content.active { grid-template-columns: 1fr 1fr; }
+      .excited-grid { grid-template-columns: 1fr; }
+      .connect-options { flex-direction: column; align-items: center; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="#">SK<span>·</span></a>
+    <ul class="nav-links">
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#recommendations">Recs</a></li>
+      <li><a href="#now">Now</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-bg"></div>
+    <svg class="hero-geo" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="170" cy="170" r="160" stroke="#c8933a" stroke-width="1"/>
+      <circle cx="170" cy="170" r="120" stroke="#c8933a" stroke-width="1"/>
+      <circle cx="170" cy="170" r="80" stroke="#c8933a" stroke-width="1"/>
+      <line x1="10" y1="170" x2="330" y2="170" stroke="#c8933a" stroke-width="0.5"/>
+      <line x1="170" y1="10" x2="170" y2="330" stroke="#c8933a" stroke-width="0.5"/>
+      <line x1="57" y1="57" x2="283" y2="283" stroke="#c8933a" stroke-width="0.5"/>
+      <line x1="283" y1="57" x2="57" y2="283" stroke="#c8933a" stroke-width="0.5"/>
+      <polygon points="170,30 310,250 30,250" stroke="#c8933a" stroke-width="0.5" fill="none"/>
+      <polygon points="170,310 30,90 310,90" stroke="#c8933a" stroke-width="0.5" fill="none"/>
+    </svg>
+    <div class="hero-content">
+      <div class="hero-eyebrow fade-up" style="animation-delay:0.2s">A living archive</div>
+      <h1 class="fade-up" style="animation-delay:0.4s">Stéphane<br><em>Karim</em></h1>
+      <!-- ══ WIRED: bio comes from dashboard settings ══ -->
+      <p class="hero-sub fade-up" id="hero-bio" style="animation-delay:0.6s">
+        Spatial artist. Bartender. Creative consultant. African Renaissance philosopher. This is where I think out loud.
+      </p>
+      <div class="hero-scroll-hint fade-up" style="animation-delay:1s">Scroll</div>
+    </div>
+    <div class="hero-right fade-up" style="animation-delay:0.8s">
+      <div class="hero-tagline-block">
+        <p>"Objects carry memory.<br>Spaces carry lineage.<br>Everything vibrates<br>with what came before."</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-label">Philosophy</div>
+    <div class="about-grid">
+      <div>
+        <h2>How I <em>see</em><br>the world</h2>
+        <p class="about-body">
+          I am an African Renaissance artist rooted in Brooklyn, with ancestral ties to Ivory Coast and Nigeria. My work lives at the intersection of spatial art, pan-African philosophy, and the technologies of memory — quantum, ancestral, and ecological.
+          <br><br>
+          I believe that art is not decoration. It is a technology. A ceremony. A way of transmitting what cannot be said in plain language.
+        </p>
+      </div>
+      <div class="pillars">
+        <div class="pillar"><div class="pillar-num">01</div><h3>The African Renaissance</h3><p>A reclamation — not a return. Africa is not the past. It is the operating system beneath everything I build.</p></div>
+        <div class="pillar"><div class="pillar-num">02</div><h3>Ancestral Resonance</h3><p>Objects carry the vibration of those who held them. Spaces remember. My installations are instruments of listening.</p></div>
+        <div class="pillar"><div class="pillar-num">03</div><h3>Quantum Space & Memory</h3><p>Consciousness, identity, and place are entangled. Science confirms what elders already knew.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTS — rendered by JS from dashboard data -->
+  <section class="posts" id="writing">
+    <div class="section-label">Writing</div>
+    <h2>From the <em>archive</em></h2>
+    <div style="margin-bottom:2.5rem; opacity:0.6; font-size:1rem; max-width:540px;">
+      Ideas on art, culture, hospitality, technology, and the threads between them.
+    </div>
+    <!-- ══ WIRED: post cards injected here by renderPosts() ══ -->
+    <div class="posts-grid" id="posts-grid"></div>
+  </section>
+
+  <!-- RECOMMENDATIONS (static — edit directly in this file) -->
+  <section class="recs" id="recommendations">
+    <div class="section-label">Recommendations</div>
+    <h2>What I'm <em>passing on</em></h2>
+    <div class="recs-tabs">
+      <button class="tab-btn active" onclick="switchTab('reads')">Reads</button>
+      <button class="tab-btn" onclick="switchTab('sounds')">Sounds</button>
+      <button class="tab-btn" onclick="switchTab('places')">Places</button>
+      <button class="tab-btn" onclick="switchTab('tools')">Tools</button>
+    </div>
+    <div id="tab-reads" class="tab-content active">
+      <div class="rec-card"><div class="rec-icon">📖</div><div class="rec-title">Things Fall Apart — Achebe</div><div class="rec-sub">The original novel of African complexity. Re-read it every few years.</div></div>
+      <div class="rec-card"><div class="rec-icon">📖</div><div class="rec-title">Decolonising the Mind — Ngũgĩ</div><div class="rec-sub">On language, identity, and what we give up when we borrow someone else's tongue.</div></div>
+      <div class="rec-card"><div class="rec-icon">📖</div><div class="rec-title">The Wretched of the Earth — Fanon</div><div class="rec-sub">A foundation text. Dense. Necessary. Transformative.</div></div>
+      <div class="rec-card"><div class="rec-icon">📖</div><div class="rec-title">An African in Greenland — Kpomassie</div><div class="rec-sub">An African Renaissance story hiding in travel writing form.</div></div>
+    </div>
+    <div id="tab-sounds" class="tab-content">
+      <div class="rec-card"><div class="rec-icon">🎵</div><div class="rec-title">Fela Kuti — Zombie</div><div class="rec-sub">The album that proves music is a political instrument.</div></div>
+      <div class="rec-card"><div class="rec-icon">🎵</div><div class="rec-title">Miriam Makeba — Pata Pata</div><div class="rec-sub">Joy as resistance. Sound as homeland.</div></div>
+      <div class="rec-card"><div class="rec-icon">🎵</div><div class="rec-title">William Onyeabor — Atomic Bomb</div><div class="rec-sub">Afrofuturism before the word existed. Pure frequency.</div></div>
+      <div class="rec-card"><div class="rec-icon">🎵</div><div class="rec-title">Highlife Classics, Ghana 1970s</div><div class="rec-sub">The original Afropop. Happiness you can feel in your bones.</div></div>
+    </div>
+    <div id="tab-places" class="tab-content">
+      <div class="rec-card"><div class="rec-icon">📍</div><div class="rec-title">Marché Rue Dix — Brooklyn</div><div class="rec-sub">Bedford Ave. A cultural anchor in Bed-Stuy.</div></div>
+      <div class="rec-card"><div class="rec-icon">📍</div><div class="rec-title">Plateau — Abidjan</div><div class="rec-sub">The heartbeat of Abidjan. Where architecture meets commerce meets culture.</div></div>
+      <div class="rec-card"><div class="rec-icon">📍</div><div class="rec-title">Casanara Brooklyn</div><div class="rec-sub">Community space with real cultural intention.</div></div>
+      <div class="rec-card"><div class="rec-icon">📍</div><div class="rec-title">Lagos Island, Nigeria</div><div class="rec-sub">Walk it. Feel how memory and future coexist in the same block.</div></div>
+    </div>
+    <div id="tab-tools" class="tab-content">
+      <div class="rec-card"><div class="rec-icon">🛠️</div><div class="rec-title">Notion</div><div class="rec-sub">How I organize everything. Projects, essays, research — all in one space.</div></div>
+      <div class="rec-card"><div class="rec-icon">🛠️</div><div class="rec-title">Figma</div><div class="rec-sub">For visual thinking. I design before I build, always.</div></div>
+      <div class="rec-card"><div class="rec-icon">🛠️</div><div class="rec-title">IBM watsonx</div><div class="rec-sub">Enterprise AI with depth. Where I do the serious ML work.</div></div>
+      <div class="rec-card"><div class="rec-icon">🛠️</div><div class="rec-title">A physical journal</div><div class="rec-sub">Some thinking can only happen on paper.</div></div>
+    </div>
+  </section>
+
+  <!-- EXCITED ABOUT (static) -->
+  <section class="excited" id="now">
+    <div class="section-label">Now</div>
+    <h2>What I'm <em>excited</em> about</h2>
+    <div class="excited-grid">
+      <div class="excited-item"><div class="excited-item-label">Project</div><h3>Ancestral Resonance — Act II</h3><p>The Spring installation is in development. A new spatial language, new ceremonial objects. The ancestor conversation continues.</p></div>
+      <div class="excited-item"><div class="excited-item-label">Research</div><h3>Post-Quantum Cryptography</h3><p>Building a multi-agent AI system to detect non-PQC cipher configurations. The future of digital security is here now.</p></div>
+      <div class="excited-item"><div class="excited-item-label">Community</div><h3>ZACA Brooklyn</h3><p>A bar rooted in African cultural identity. Cocktails as ceremony. Tiébélé-inspired aesthetics. Bed-Stuy as home.</p></div>
+      <div class="excited-item"><div class="excited-item-label">Learning</div><h3>Biology B.S. — Brooklyn College</h3><p>The science of life informs everything. Finishing December 2026.</p></div>
+      <div class="excited-item"><div class="excited-item-label">Idea</div><h3>African Urban Data Intelligence</h3><p>Open data from Abidjan, Accra, Lagos — analyzed, mapped, made useful.</p></div>
+      <div class="excited-item"><div class="excited-item-label">Philosophy</div><h3>The Future is African</h3><p>Not a slogan. A structural argument. The demographics, the resources, the creative energy — it's already there.</p></div>
+    </div>
+  </section>
+
+  <!-- CONNECT -->
+  <section class="connect" id="connect">
+    <div class="section-label">Connect</div>
+    <h2>Let's <em>build</em><br>something together</h2>
+    <p class="connect-sub">I'm available for creative consulting, spatial art commissions, bartending partnerships, speaking, and collaborations rooted in cultural vision.</p>
+    <div class="connect-options">
+      <a href="mailto:hello@stephanekarim.com" class="connect-card"><div class="connect-card-icon">✉️</div><div class="connect-card-title">Creative Consulting</div><div class="connect-card-desc">Brand identity, spatial concepts, cultural strategy</div></a>
+      <a href="mailto:art@stephanekarim.com" class="connect-card"><div class="connect-card-icon">🎨</div><div class="connect-card-title">Art Commissions</div><div class="connect-card-desc">Installations, spatial art, print sales</div></a>
+      <a href="mailto:events@stephanekarim.com" class="connect-card"><div class="connect-card-icon">🥂</div><div class="connect-card-title">Events & Hospitality</div><div class="connect-card-desc">Cocktail programs, event curation, activations</div></a>
+      <a href="mailto:press@stephanekarim.com" class="connect-card"><div class="connect-card-icon">📣</div><div class="connect-card-title">Press & Speaking</div><div class="connect-card-desc">Panels, interviews, editorial features</div></a>
+    </div>
+    <div class="connect-email-block">
+      <div class="connect-email-label">Or reach me directly</div>
+      <a class="connect-email" href="mailto:hello@stephanekarim.com">hello@stephanekarim.com</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Stéphane Karim · Brooklyn, New York · Roots in Abidjan & Lagos</p>
+    <div class="footer-mark">A Living Archive</div>
+    <p>Built with intention.</p>
+  </footer>
+
+  <script>
+  /* ═══════════════════════════════════════════════════════
+     HOW THE WIRING WORKS
+     ───────────────────────────────────────────────────────
+     The dashboard (stephane-dashboard.html) saves all your
+     blog data into the browser's localStorage under the key
+     "sk_archive_data". localStorage is like a small built-in
+     database that lives in your browser — it persists even
+     after you close the tab.
+
+     This blog file reads that same key on page load, then
+     uses JavaScript to build the post cards dynamically
+     instead of having them hard-coded in the HTML.
+
+     The shared key name "sk_archive_data" is the single
+     "wire" connecting the two files. Both files must be
+     open in the SAME browser for the data to be shared.
+     (On different devices, use Export/Import in the dashboard.)
+  ═══════════════════════════════════════════════════════ */
+
+  const STORAGE_KEY = 'sk_archive_data'; // ← must match dashboard exactly
+
+  // ── 1. LOAD DATA FROM LOCALSTORAGE ──────────────────────
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ── 2. RENDER BIO FROM SETTINGS ─────────────────────────
+  function renderBio(data) {
+    if (data?.settings?.bio) {
+      document.getElementById('hero-bio').textContent = data.settings.bio;
+    }
+  }
+
+  // ── 3. BUILD POST CARDS FROM ARTICLES ARRAY ─────────────
+  function renderPosts(data) {
+    const grid = document.getElementById('posts-grid');
+    grid.innerHTML = '';
+
+    if (!data?.articles?.length) {
+      grid.innerHTML = '<div class="empty-posts">No posts published yet</div>';
+      return;
+    }
+
+    // Filter to published only, sorted by order field
+    const published = data.articles
+      .filter(a => a.status === 'published')
+      .sort((a, b) => a.order - b.order);
+
+    if (!published.length) {
+      grid.innerHTML = '<div class="empty-posts">No published posts yet</div>';
+      return;
+    }
+
+    published.forEach((art, i) => {
+      // First published post marked as featured gets the big card
+      const isFeatured = art.featured && i === published.findIndex(a => a.featured);
+      const card = document.createElement('article');
+      card.className = 'post-card' + (isFeatured ? ' featured' : '');
+
+      if (isFeatured) {
+        // Featured: two-column layout with image left, text right
+        const imgHtml = art.image
+          ? `<img src="${esc(art.image)}" alt="${esc(art.title)}" onerror="this.style.display='none'"/>`
+          : `<svg class="no-img" width="80" height="80" viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="#c8933a" stroke-width="1.5"/><circle cx="40" cy="40" r="20" stroke="#c8933a" stroke-width="1"/><line x1="4" y1="40" x2="76" y2="40" stroke="#c8933a" stroke-width="0.8"/><line x1="40" y1="4" x2="40" y2="76" stroke="#c8933a" stroke-width="0.8"/></svg>`;
+
+        card.innerHTML = `
+          <div class="featured-image-box">${imgHtml}</div>
+          <div>
+            <div class="post-cat">${esc(art.category)} · Featured</div>
+            <h2 class="post-title" style="font-size:1.8rem; color:var(--paper);">${esc(art.title)}</h2>
+            <p class="post-excerpt">${esc(art.excerpt)}</p>
+            <a class="read-more" href="#" style="color:var(--gold);">Read</a>
+          </div>`;
+      } else {
+        // Standard card
+        const coverHtml = art.image
+          ? `<div class="post-cover"><img src="${esc(art.image)}" alt="${esc(art.title)}" onerror="this.parentElement.innerHTML='<span class=no-img-small>No image</span>'"/></div>`
+          : '';
+
+        card.innerHTML = `
+          ${coverHtml}
+          <div class="post-cat">${esc(art.category)}</div>
+          <h2 class="post-title">${esc(art.title)}</h2>
+          <p class="post-excerpt">${esc(art.excerpt)}</p>
+          <div class="post-meta">${esc(art.readtime)}</div>
+          <a class="read-more" href="#">Read</a>`;
+      }
+
+      grid.appendChild(card);
+    });
+
+    // Animate cards in
+    document.querySelectorAll('.post-card').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(14px)';
+      el.style.transition = `opacity 0.5s ease ${i * 0.07}s, transform 0.5s ease ${i * 0.07}s`;
+      setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 50);
+    });
+  }
+
+  // ── 4. SAFETY: escape HTML to prevent XSS ───────────────
+  function esc(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── 5. INIT: run on page load ────────────────────────────
+  function init() {
+    const data = loadData();
+    renderBio(data);
+    renderPosts(data);
+  }
+
+  // ── 6. LIVE SYNC: re-render if dashboard saves while blog is open ──
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY) {
+      const data = loadData();
+      renderBio(data);
+      renderPosts(data);
+    }
+  });
+
+  // Run on load
+  init();
+
+  // ── TABS (recommendations — unchanged) ──
+  function switchTab(id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Scroll fade-in for other elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.rec-card, .excited-item, .connect-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+  </script>
+</body>
+</html>
